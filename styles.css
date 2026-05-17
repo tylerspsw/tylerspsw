@@ -561,119 +561,314 @@ button {
 
 
 /* ============================================================
-   AI VISIBILITY SYSTEM SECTION
+   SIGNATURE LINE SECTION
    ============================================================ */
-.system {
-  padding: var(--pad-section) 0 calc(var(--pad-section) + 40px);
+.sig-section {
+  padding: calc(var(--pad-section) + 20px) 0 calc(var(--pad-section) + 60px);
+  background: var(--cream);
 }
 
-.system-header {
-  text-align: center;
-  max-width: 620px;
-  margin: 0 auto 64px;
-}
-
-.system-header h2 {
-  font-family: var(--serif);
-  font-size: clamp(32px, 4vw, 52px);
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.015em;
-  color: var(--charcoal);
-  margin-bottom: 18px;
-}
-
-.system-sub {
-  font-size: 17px;
-  line-height: 1.68;
-  color: var(--body-gray);
-}
-
-/* Diagram grid */
-.system-diagram {
+/* 2-col editorial header */
+.sig-head {
   display: grid;
-  grid-template-columns: 1fr 160px 1fr;
-  gap: 0 28px;
-  max-width: 780px;
-  margin: 0 auto;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 48px;
+  align-items: end;
+  margin-bottom: 80px;
 }
 
-/* Left and right card columns */
-.system-col {
-  position: relative;
-  height: 500px; /* matches SVG height */
-}
-
-/* Cards are absolutely positioned using --card-top CSS custom property */
-.sys-card {
-  position: absolute;
-  width: 210px;
-  background: var(--white);
-  border-radius: var(--r-card);
-  padding: 20px 22px;
-  box-shadow: var(--shadow-card);
-  border: 1px solid var(--divider);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  top: var(--card-top, 0px);
-}
-.sys-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lift);
-}
-
-/* Left cards: anchor to the right edge of left column */
-.system-col--left .sys-card {
-  right: 0;
-}
-
-/* Right cards: anchor to the left edge of right column */
-.system-col--right .sys-card {
-  left: 0;
-}
-
-.sys-card-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 9px;
-  background: rgba(240, 90, 40, 0.09);
-  color: var(--orange);
+.sig-eyebrow {
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-bottom: 12px;
+  gap: 10px;
+  font-family: ui-monospace, 'Courier New', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted-gray);
+  margin-bottom: 18px;
+}
+.sig-eyebrow-rule {
+  display: block;
+  width: 28px;
+  height: 1px;
+  background: var(--muted-gray);
   flex-shrink: 0;
 }
+.sig-eyebrow-num { color: var(--orange); }
 
-.sys-card h4 {
-  font-size: 15px;
+.sig-title {
+  font-family: var(--serif);
+  font-size: clamp(38px, 4.8vw, 62px);
   font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
   color: var(--charcoal);
-  margin-bottom: 4px;
-}
-
-.sys-card p {
-  font-size: 12.5px;
-  color: var(--muted-gray);
   margin: 0;
-  line-height: 1.5;
 }
 
-/* SVG monogram line column */
-.system-line-col {
+.sig-accent {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--orange);
+}
+
+.sig-lede {
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--body-gray);
+  max-width: 46ch;
+  align-self: end;
+  padding-bottom: 4px;
+}
+.sig-lede strong {
+  color: var(--charcoal);
+  font-weight: 700;
+}
+
+/* ---- Horizontal ap monogram line ---- */
+.sigline {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1200 / 480;
+  margin: 0 0 36px;
+  overflow: visible;
+}
+
+.sigline-path {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.sig-stroke {
+  fill: none;
+  stroke: var(--charcoal);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 2400;
+  stroke-dashoffset: 2400;
+  animation: sigDraw 2.6s ease-out 0.2s forwards;
+}
+
+.sig-end-dot {
+  fill: var(--orange);
+  opacity: 0;
+  animation: sigFade 0.4s ease-out 2.7s forwards;
+}
+
+@keyframes sigDraw { to { stroke-dashoffset: 0; } }
+@keyframes sigFade { to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .sig-stroke { animation: none; stroke-dashoffset: 0; }
+  .sig-end-dot { animation: none; opacity: 1; }
+}
+
+/* Anchor node — sized to the dot, centered on its line position */
+.sig-node {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  transform: translate(-50%, -50%);
+}
+
+.sig-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--cream);
+  box-shadow: 0 0 0 2px var(--charcoal), 0 8px 18px -8px rgba(0,0,0,0.28);
+}
+.sig-node.active .sig-dot {
+  background: var(--orange);
+  box-shadow: 0 0 0 2px var(--charcoal),
+              0 0 0 8px rgba(240,90,40,0.18),
+              0 8px 18px -8px rgba(0,0,0,0.3);
+}
+.sig-node.gold .sig-dot {
+  background: var(--amber);
+  box-shadow: 0 0 0 2px var(--charcoal), 0 8px 18px -8px rgba(0,0,0,0.28);
+}
+
+/* Floating editorial card */
+.sig-lbl {
+  position: absolute;
+  background: var(--white);
+  padding: 14px 18px;
+  border-radius: var(--r-card);
+  box-shadow:
+    0 14px 30px -16px rgba(28,28,30,0.22),
+    0 2px 6px -3px rgba(28,28,30,0.06),
+    inset 0 0 0 1px var(--divider);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 170px;
+  z-index: 2;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.sig-lbl:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 20px 36px -16px rgba(28,28,30,0.28),
+    0 2px 6px -3px rgba(28,28,30,0.08),
+    inset 0 0 0 1px var(--divider);
+}
+
+.sig-num {
+  font-family: ui-monospace, 'Courier New', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted-gray);
+}
+
+b.sig-name {
+  font-family: var(--sans);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--charcoal);
+}
+
+.sig-desc {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--body-gray);
+  max-width: 22ch;
+}
+
+/* Node + card positions
+   Each .sig-lbl is absolutely positioned relative to its 18×18 .sig-node dot.
+   Cards clear the dot by 14px on the relevant side. */
+
+/* n1 (Visibility) — start of path, lower-left → card RIGHT of dot */
+.sig-node.n1 { left: 9%; top: 64%; }
+.sig-node.n1 .sig-lbl {
+  left: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* n2 (Structure) — top of 'a' loop → card ABOVE dot */
+.sig-node.n2 { left: 25%; top: 18%; }
+.sig-node.n2 .sig-lbl {
+  bottom: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* n3 (Trust) — center valley → card BELOW dot */
+.sig-node.n3 { left: 50%; top: 62%; }
+.sig-node.n3 .sig-lbl {
+  top: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* n4 (Recommendation) — top of 'p' loop → card ABOVE dot */
+.sig-node.n4 { left: 75%; top: 18%; }
+.sig-node.n4 .sig-lbl {
+  bottom: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* n5 (Measurement) — end of path, lower-right → card LEFT of dot */
+.sig-node.n5 { left: 94%; top: 80%; }
+.sig-node.n5 .sig-lbl {
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Footer metadata bar */
+.sig-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding-top: 32px;
+  border-top: 1px solid var(--divider);
+  font-family: ui-monospace, 'Courier New', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted-gray);
+}
+.sig-foot-gold { color: var(--amber); }
+
+/* Mobile vertical timeline */
+.sigline-mobile {
+  display: none;
+  list-style: none;
+  margin: 0 0 36px;
+  padding: 0;
+}
+
+.sm-item {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 18px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--divider);
+}
+.sm-item:last-child { border-bottom: none; }
+
+.sm-stem {
+  position: relative;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
 }
-
-.monogram-svg {
-  width: 160px;
-  height: 500px;
-  overflow: visible; /* allows connector dashes to extend beyond viewBox */
-  flex-shrink: 0;
+.sm-stem::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: -20px; left: 50%;
+  width: 2px;
+  background: var(--charcoal);
+  transform: translateX(-50%);
 }
+.sm-item:last-child .sm-stem::before { bottom: 50%; }
 
-.mono-path {
-  /* The main "ap" monogram stroke */
+.sm-dot {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--cream);
+  box-shadow: 0 0 0 2px var(--charcoal);
+  position: relative;
+  z-index: 1;
+  margin-top: 4px;
+}
+.sm-item.active .sm-dot { background: var(--orange); }
+.sm-item.gold .sm-dot { background: var(--amber); }
+
+.sm-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 2px;
+}
+.sm-body b {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--charcoal);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.sm-body p {
+  font-size: 14px;
+  color: var(--body-gray);
+  max-width: 38ch;
+  line-height: 1.5;
 }
 
 
@@ -787,12 +982,10 @@ button {
     flex: 1 1 160px;
   }
 
-  /* System diagram: slightly narrower */
-  .system-diagram {
-    gap: 0 20px;
+  /* Sig section: tighten header gap */
+  .sig-head {
+    gap: 32px;
   }
-
-  .sys-card { width: 190px; }
 }
 
 
@@ -894,31 +1087,17 @@ button {
     right: -10px;
   }
 
-  /* System — simplified for mobile: stack cards, hide SVG line */
-  .system-diagram {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    max-width: 100%;
+  /* Sig section: single-col header, show mobile list, hide svg line */
+  .sig-head {
+    grid-template-columns: 1fr;
+    margin-bottom: 40px;
+    gap: 20px;
   }
-  .system-line-col {
-    display: none; /* hide the SVG diagram on small screens */
+  .sigline {
+    display: none;
   }
-  .system-col {
-    position: static;
-    height: auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-  }
-  .sys-card {
-    position: static;
-    width: 100%;
-    top: auto;
-  }
-  .system-col--left,
-  .system-col--right {
-    margin-bottom: 14px;
+  .sigline-mobile {
+    display: block;
   }
 }
 
@@ -927,8 +1106,9 @@ button {
    RESPONSIVE — SMALL MOBILE  (≤ 480px)
    ============================================================ */
 @media (max-width: 480px) {
-  .system-col {
-    grid-template-columns: 1fr;
+  .sig-foot {
+    flex-direction: column;
+    gap: 10px;
   }
   .hero-badge {
     display: none; /* hide on very small screens to avoid overlap */
